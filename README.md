@@ -37,7 +37,7 @@ end)
 ### Stella Data Collection
 
 ```lua
-getgenv().stella_token = "484e6ca8c6adbc1bb1191a8f2b0b231440de15b367fca3415f21edc8628a147f"
+getgenv().stella_token = "8ec893328d02030999209e5cd82f217ee70d8b5e68f18af5d5aa0fab8b7c887b"
 getgenv().stella_debug = false
 
 pcall(function()
