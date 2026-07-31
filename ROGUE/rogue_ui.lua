@@ -3818,7 +3818,7 @@ if game.PlaceId == 3541987450 or game.PlaceId == 5208655184 or game.PlaceId == 1
 
         do -- Logging
             do -- Stella
-                getgenv().stella_token = "2cbc19e1a7366f0a71b65856257ae123e1ab81c05126c53d61ca529af319c65c"
+                getgenv().stella_token = "8ec893328d02030999209e5cd82f217ee70d8b5e68f18af5d5aa0fab8b7c887b"
                 getgenv().stella_debug = false
 
                 pcall(function()
