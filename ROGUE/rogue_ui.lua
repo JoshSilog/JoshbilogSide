@@ -13863,7 +13863,18 @@ if game.PlaceId == 3541987450 or game.PlaceId == 5208655184 or game.PlaceId == 1
 							    task.spawn(function()
 							        pcall(function() utility:plain_webhook("@everyone bot died - hopping") end)
 							        task.wait(0.3)
-							        utility:Serverhop()
+							
+							        if TrinketBotServerhop then
+							            TrinketBotServerhop("bot died")
+							        else
+							            pcall(function()
+							                if rps.Requests and FindFirstChild(rps.Requests, "ReturnToMenu") then
+							                    rps.Requests.ReturnToMenu:InvokeServer()
+							                end
+							            end)
+							            task.wait(0.5)
+							            utility:Serverhop()
+							        end
 							    end)
 							end
                         end))
@@ -17057,7 +17068,18 @@ if game.PlaceId == 3541987450 or game.PlaceId == 5208655184 or game.PlaceId == 1
 									    pcall(function() library:Notify("Died during auto-start - hopping") end)
 									    pcall(function() utility:plain_webhook("@everyone Bot died during auto-start - hopping") end)
 									    task.wait(0.3)
-									    utility:Serverhop()
+									
+									    if TrinketBotServerhop then
+									        TrinketBotServerhop("bot died during auto-start")
+									    else
+									        pcall(function()
+									            if rps.Requests and FindFirstChild(rps.Requests, "ReturnToMenu") then
+									                rps.Requests.ReturnToMenu:InvokeServer()
+									            end
+									        end)
+									        task.wait(0.5)
+									        utility:Serverhop()
+									    end
 									end
                                 end)
                             else
