@@ -13860,12 +13860,12 @@ if game.PlaceId == 3541987450 or game.PlaceId == 5208655184 or game.PlaceId == 1
                                 pcall(function() library:Notify("You died (stay in server - not kicking)") end)
                                 pcall(function() utility:plain_webhook("@here bot died (stay in server mode)") end)
                             else
-                                task.spawn(function()
-                                    pcall(function() utility:plain_webhook("@everyone bot died - kicking") end)
-                                    task.wait(0.3)
-                                    plr:Kick("bot died")
-                                end)
-                            end
+							    task.spawn(function()
+							        pcall(function() utility:plain_webhook("@everyone bot died - hopping") end)
+							        task.wait(0.3)
+							        utility:Serverhop()
+							    end)
+							end
                         end))
                     else
                         trinket_bot.path_running = false
@@ -17054,11 +17054,11 @@ if game.PlaceId == 3541987450 or game.PlaceId == 5208655184 or game.PlaceId == 1
                                         pcall(function() library:Notify("Died during auto-start (stay in server mode)") end)
                                         pcall(function() utility:plain_webhook("@here Bot died during auto-start (stay in server mode)") end)
                                     else
-                                        pcall(function() library:Notify("Died during auto-start - kicking") end)
-                                        pcall(function() utility:plain_webhook("@everyone Bot died during auto-start - kicking") end)
-                                        task.wait(0.3)
-                                        plr:Kick("Bot died during auto-start")
-                                    end
+									    pcall(function() library:Notify("Died during auto-start - hopping") end)
+									    pcall(function() utility:plain_webhook("@everyone Bot died during auto-start - hopping") end)
+									    task.wait(0.3)
+									    utility:Serverhop()
+									end
                                 end)
                             else
                                 utility:plain_webhook("@everyone CRITICAL: Humanoid not found during auto-start - kicking for safety")
