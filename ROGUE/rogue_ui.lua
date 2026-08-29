@@ -8289,9 +8289,49 @@ if game.PlaceId == 3541987450 or game.PlaceId == 5208655184 or game.PlaceId == 1
         end
 
         do
-            local group_character = Tabs.Exploits:AddLeftGroupbox("Character")
-            local group_camera = Tabs.Exploits:AddRightGroupbox("Camera")
-            local group_exploits = Tabs.Exploits:AddRightGroupbox("Exploits")
+			            local group_character = Tabs.Exploits:AddLeftGroupbox("Character")
+			            local group_camera = Tabs.Exploits:AddRightGroupbox("Camera")
+			            local group_exploits = Tabs.Exploits:AddRightGroupbox("Exploits")
+			
+						group_character:AddButton("Knock Yourself", function()
+			    if not plr.Character then
+			        library:Notify("No character")
+			        return
+			    end
+			
+			    -- Prefer CharacterHandler remotes (current structure)
+			    local handler = FindFirstChild(plr.Character, "CharacterHandler")
+			    local fallRemote = handler and FindFirstChild(handler, "Remotes") and FindFirstChild(handler.Remotes, "FallDamage")
+			
+			    -- Fallback: ReplicatedStorage Requests
+			    if not fallRemote and rps and FindFirstChild(rps, "Requests") then
+			        fallRemote = FindFirstChild(rps.Requests, "FallDamage")
+			    end
+			
+			    if fallRemote then
+			        -- Temporarily disable No Fall so the damage applies
+			        local hadNoFall = Toggles and Toggles.no_fall and Toggles.no_fall.Value
+			        if hadNoFall then
+			            Toggles.no_fall:SetValue(false)
+			        end
+			
+			        pcall(function()
+			            fallRemote:FireServer({math.random(), 1})
+			        end)
+			
+			        if hadNoFall then
+			            task.delay(0.5, function()
+			                if Toggles and Toggles.no_fall then
+			                    Toggles.no_fall:SetValue(true)
+			                end
+			            end)
+			        end
+			
+			        library:Notify("Knocked yourself")
+			    else
+			        library:Notify("FallDamage remote not found")
+			    end
+			end)
     
             do
                 group_character:AddToggle("instant_mine", {
