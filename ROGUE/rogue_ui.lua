@@ -10427,6 +10427,22 @@ if game.PlaceId == 3541987450 or game.PlaceId == 5208655184 or game.PlaceId == 1
 
             group_server_join:AddDivider()
 
+
+            group_server_join:AddButton({
+			    Text = "Copy Job ID",
+			    Func = function()
+			        local jobId = game.JobId
+			        if jobId and jobId ~= "" then
+			            setclipboard(jobId)
+			            library:Notify("Job ID copied: " .. jobId, 3)
+			        else
+			            library:Notify("No Job ID found", 3)
+			        end
+			    end,
+			    DoubleClick = false,
+			    Tooltip = "Copy current server Job ID to clipboard"
+			})
+
             group_server_join:AddButton({
                 Text = "Join Largest Server",
                 Func = function()
@@ -10442,21 +10458,6 @@ if game.PlaceId == 3541987450 or game.PlaceId == 5208655184 or game.PlaceId == 1
                 DoubleClick = false,
                 Tooltip = "Join the server with the most players"
             })
-
-			group_server_join:AddButton({
-			    Text = "Copy Job ID",
-			    Func = function()
-			        local jobId = game.JobId
-			        if jobId and jobId ~= "" then
-			            setclipboard(jobId)
-			            library:Notify("Job ID copied: " .. jobId, 3)
-			        else
-			            library:Notify("No Job ID found", 3)
-			        end
-			    end,
-			    DoubleClick = false,
-			    Tooltip = "Copy current server Job ID to clipboard"
-			})
 
             group_server_join:AddButton({
                 Text = "Join Smallest Server",
