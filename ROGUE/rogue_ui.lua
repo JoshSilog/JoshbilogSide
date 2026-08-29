@@ -8289,11 +8289,20 @@ if game.PlaceId == 3541987450 or game.PlaceId == 5208655184 or game.PlaceId == 1
         end
 
         do
-			            local group_character = Tabs.Exploits:AddLeftGroupbox("Character")
-			            local group_camera = Tabs.Exploits:AddRightGroupbox("Camera")
-			            local group_exploits = Tabs.Exploits:AddRightGroupbox("Exploits")
-			
-						
+            local group_character = Tabs.Exploits:AddLeftGroupbox("Character")
+            local group_camera = Tabs.Exploits:AddRightGroupbox("Camera")
+            local group_exploits = Tabs.Exploits:AddRightGroupbox("Exploits")
+    
+            do
+                group_character:AddToggle("instant_mine", {
+                    Text = "Instant Mine",
+                    Default = cheat_client.config.instant_mine,
+                    Tooltip = "Need min 5 pickaxes",
+                    Callback = function(value)
+                        cheat_client.config.instant_mine = value
+                    end
+                })
+
 
                 group_character:AddToggle("no_insanity", {
                     Text = "No Insane",
