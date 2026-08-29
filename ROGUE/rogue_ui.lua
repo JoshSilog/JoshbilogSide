@@ -8294,54 +8294,63 @@ if game.PlaceId == 3541987450 or game.PlaceId == 5208655184 or game.PlaceId == 1
 			            local group_exploits = Tabs.Exploits:AddRightGroupbox("Exploits")
 			
 						group_character:AddButton("Knock Yourself", function()
-			    if not plr.Character then
-			        library:Notify("No character")
-			        return
-			    end
-			
-			    -- Prefer CharacterHandler remotes (current structure)
-			    local handler = FindFirstChild(plr.Character, "CharacterHandler")
-			    local fallRemote = handler and FindFirstChild(handler, "Remotes") and FindFirstChild(handler.Remotes, "FallDamage")
-			
-			    -- Fallback: ReplicatedStorage Requests
-			    if not fallRemote and rps and FindFirstChild(rps, "Requests") then
-			        fallRemote = FindFirstChild(rps.Requests, "FallDamage")
-			    end
-			
-			    if fallRemote then
-			        -- Temporarily disable No Fall so the damage applies
-			        local hadNoFall = Toggles and Toggles.no_fall and Toggles.no_fall.Value
-			        if hadNoFall then
-			            Toggles.no_fall:SetValue(false)
-			        end
-			
-			        pcall(function()
-			            fallRemote:FireServer({math.random(), 1})
-			        end)
-			
-			        if hadNoFall then
-			            task.delay(0.5, function()
-			                if Toggles and Toggles.no_fall then
-			                    Toggles.no_fall:SetValue(true)
-			                end
-			            end)
-			        end
-			
-			        library:Notify("Knocked yourself")
-			    else
-			        library:Notify("FallDamage remote not found")
-			    end
-			end)
-    
-            do
-                group_character:AddToggle("instant_mine", {
-                    Text = "Instant Mine",
-                    Default = cheat_client.config.instant_mine,
-                    Tooltip = "Need min 5 pickaxes",
-                    Callback = function(value)
-                        cheat_client.config.instant_mine = value
-                    end
-                })
+    if not plr.Character then
+        library:Notify("No character")
+        return
+    end
+
+    local handler = FindFirstChild(plr.Character, "CharacterHandler")
+    local remotes = handler and FindFirstChild(handler, "Remotes")
+    if not remotes then
+        library:Notify("Remotes folder not found")
+        return
+    end
+
+    -- Temporarily turn off No Fall so the packet isn't blocked
+    local hadNoFall = Toggles and Toggles.no_fall and Toggles.no_fall.Value
+    if hadNoFall then
+        Toggles.no_fall:SetValue(false)
+    end
+
+    local fired = false
+
+    -- Try every remote in CharacterHandler.Remotes with known fall-damage args
+    for _, remote in ipairs(remotes:GetChildren()) do
+        if remote:IsA("RemoteEvent") then
+            -- Skip known non-fall remotes
+            local n = remote.Name
+            if n == "LeftClick" or n == "RightClick" or n == "Block" or n == "Dash" then
+                continue
+            end
+
+            -- Pattern Aztup uses (1 table arg)
+            pcall(function()
+                remote:FireServer({math.random(), 1})
+            end)
+
+            -- Pattern Hydroxide's no_fall expects (2 args, 2nd is table)
+            pcall(function()
+                remote:FireServer(math.random(), {math.random(), 1})
+            end)
+
+            fired = true
+        end
+    end
+
+    if hadNoFall then
+        task.delay(0.6, function()
+            if Toggles and Toggles.no_fall then
+                Toggles.no_fall:SetValue(true)
+            end
+        end)
+    end
+
+    if fired then
+        library:Notify("Tried knock (check if you got knocked)")
+    else
+        library:Notify("No remotes to fire")
+    end
+end)
 
 
                 group_character:AddToggle("no_insanity", {
