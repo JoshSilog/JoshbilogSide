@@ -8294,6 +8294,35 @@ if game.PlaceId == 3541987450 or game.PlaceId == 5208655184 or game.PlaceId == 1
             local group_exploits = Tabs.Exploits:AddRightGroupbox("Exploits")
     
             do
+				
+
+
+                group_character:AddToggle("no_insanity", {
+                    Text = "No Insane",
+                    Default = cheat_client.config.no_insane,
+                    Callback = function(state)
+                        cheat_client.config.no_insane = state
+
+                        if state then
+                            if plr.Character then
+                                for _,v in pairs(plr.Character:GetChildren()) do
+                                    if cheat_client.mental_injuries[v.Name] then
+                                        v:Destroy()
+                                    end
+                                end
+                            end
+                        end
+                    end
+                })
+
+                group_character:AddDivider()
+
+                group_character:AddButton("Reset", function()
+                    if plr.Character then
+                        utility:reset();
+                    end
+                end)
+
 				group_character:AddButton("Knock Yourself", function()
 				    if not plr.Character then
 				        library:Notify("No character")
@@ -8362,33 +8391,6 @@ if game.PlaceId == 3541987450 or game.PlaceId == 5208655184 or game.PlaceId == 1
                         cheat_client.config.instant_mine = value
                     end
                 })
-
-
-                group_character:AddToggle("no_insanity", {
-                    Text = "No Insane",
-                    Default = cheat_client.config.no_insane,
-                    Callback = function(state)
-                        cheat_client.config.no_insane = state
-
-                        if state then
-                            if plr.Character then
-                                for _,v in pairs(plr.Character:GetChildren()) do
-                                    if cheat_client.mental_injuries[v.Name] then
-                                        v:Destroy()
-                                    end
-                                end
-                            end
-                        end
-                    end
-                })
-
-                group_character:AddDivider()
-
-                group_character:AddButton("Reset", function()
-                    if plr.Character then
-                        utility:reset();
-                    end
-                end)
 
                 group_character:AddButton("Give Mercenary Carry", function()
                     if plr and plr.Backpack then
