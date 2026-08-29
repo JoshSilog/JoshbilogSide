@@ -16678,7 +16678,7 @@ if game.PlaceId == 3541987450 or game.PlaceId == 5208655184 or game.PlaceId == 1
             group_trinket_bot:AddDropdown("EmergencyServerhopConditions", {
                 Text = "Emergency Serverhop Conditions",
                 Tooltip = "Select items that trigger instant serverhop when equipped by another player (no emergency gate)",
-                Values = {"Perflora", "Pebble", "Celeritas"},
+                Values = {"Perflora", "Pebble", "Celeritas", "Opal Shard"},
                 Multi = true,
                 Default = {"Perflora", "Pebble", "Celeritas"},
                 Compact = true
