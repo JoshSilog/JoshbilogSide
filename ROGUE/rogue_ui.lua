@@ -8323,66 +8323,7 @@ if game.PlaceId == 3541987450 or game.PlaceId == 5208655184 or game.PlaceId == 1
                     end
                 end)
 
-				group_character:AddButton("Knock Yourself", function()
-				    if not plr.Character then
-				        library:Notify("No character")
-				        return
-				    end
 				
-				    local handler = FindFirstChild(plr.Character, "CharacterHandler")
-				    local remotes = handler and FindFirstChild(handler, "Remotes")
-				    if not remotes then
-				        library:Notify("Remotes not found")
-				        return
-				    end
-				
-				    -- Prefer the one you found; also scan for other M0ai* remotes
-				    local fallRemote = remotes:FindFirstChild("M0aiDF3FBBF9-0798-492E-BD6A-7F8B13572678")
-				
-				    if not fallRemote then
-				        for _, r in ipairs(remotes:GetChildren()) do
-				            if r:IsA("RemoteEvent") and r.Name:sub(1, 4) == "M0ai" then
-				                local n = r.Name
-				                if n ~= "LeftClick" and n ~= "RightClick" and n ~= "Block" then
-				                    fallRemote = r
-				                    break
-				                end
-				            end
-				        end
-				    end
-				
-				    if not fallRemote then
-				        library:Notify("Fall damage remote not found — take fall dmg once with spy")
-				        return
-				    end
-				
-				    -- Don’t let No Fall block it
-				    local hadNoFall = Toggles and Toggles.no_fall and Toggles.no_fall.Value
-				    if hadNoFall then
-				        Toggles.no_fall:SetValue(false)
-				    end
-				
-				    -- Aztup-style knock (1 = knock, 2 = harder, 3 = wipe-level)
-				    pcall(function()
-				        fallRemote:FireServer({math.random(), 1})
-				    end)
-				
-				    -- Backup pattern (in case this place uses 2 args)
-				    pcall(function()
-				        fallRemote:FireServer(math.random(), {math.random(), 1})
-				    end)
-				
-				    if hadNoFall then
-				        task.delay(0.5, function()
-				            if Toggles and Toggles.no_fall then
-				                Toggles.no_fall:SetValue(true)
-				            end
-				        end)
-				    end
-				
-				    library:Notify("Fired fall damage → " .. fallRemote.Name)
-				end)
-
                 group_character:AddToggle("instant_mine", {
                     Text = "Instant Mine",
                     Default = cheat_client.config.instant_mine,
