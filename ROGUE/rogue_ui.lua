@@ -18085,6 +18085,141 @@ if game.PlaceId == 3541987450 or game.PlaceId == 5208655184 or game.PlaceId == 1
                 end
             })
 
+            group_trinket_config:AddLabel("Stop Bot Keybind"):AddKeyPicker("StopBotKeybind", {
+                Default = "None",
+                Text = "Stop Bot",
+                Mode = "Press",
+                Callback = function()
+                    if trinket_bot.path_running then
+                        trinket_bot.path_running = false
+                        mem:RemoveItem("botstarted")
+                        mem:RemoveItem("serverhop_count")
+
+                        kick_after_path = false
+                        kick_debounce = false
+                        kick_trinket_name = ""
+
+                        current_gate_section = 0
+                        player_encounters = {}
+                        emergency_gate_requested = nil
+                        proximity_warnings = {}
+                        proximity_repeat_players = {}
+                        mana_initialized = false
+                        trinket_bot.pending_artifact_logs = {}
+
+                        if cpu and cpu.status and cpu.status.active then
+                            cpu.status.active = false
+                            setfpscap(240)
+                            settings().Rendering.QualityLevel = cpu.services.ql
+                            cpu.services.rs:Set3dRenderingEnabled(true)
+                        end
+
+                        for _, connection in next, getconnections(plr.Idled) do
+                            connection:Enable()
+                        end
+
+                        if loot_tracking_connection then
+                            pcall(function() loot_tracking_connection:Disconnect() end)
+                            loot_tracking_connection = nil
+                        end
+                        for _, conn in ipairs(quantity_connections) do
+                            if conn then
+                                pcall(function() conn:Disconnect() end)
+                            end
+                        end
+                        quantity_connections = {}
+                        droppedTools = {}
+
+                        visited_positions = {}
+
+                        if shared.playerAddedConnection then
+                            shared.playerAddedConnection:Disconnect()
+                            shared.playerAddedConnection = nil
+                        end
+                        if shared.day_farm_player_connections then
+                            for player, conn in pairs(shared.day_farm_player_connections) do
+                                if conn and conn.Disconnect then
+                                    conn:Disconnect()
+                                end
+                            end
+                            shared.day_farm_player_connections = {}
+                        end
+                        if shared.deathConnection then
+                            shared.deathConnection:Disconnect()
+                            shared.deathConnection = nil
+                        end
+                        if shared.characterAddedConnection then
+                            shared.characterAddedConnection:Disconnect()
+                            shared.characterAddedConnection = nil
+                        end
+
+                        for _, part in ipairs(trinket_bot.point_visualizations) do
+                            if part and part.Parent then
+                                part:Destroy()
+                            end
+                        end
+                        trinket_bot.point_visualizations = {}
+
+                        if trinket_bot.connections then
+                            for name, conn in pairs(trinket_bot.connections) do
+                                if conn then
+                                    pcall(function() conn:Disconnect() end)
+                                end
+                            end
+                            trinket_bot.connections = {}
+                        end
+
+                        if trinket_bot.illu_connections then
+                            for _, conn in ipairs(trinket_bot.illu_connections) do
+                                if conn then
+                                    pcall(function() conn:Disconnect() end)
+                                end
+                            end
+                            trinket_bot.illu_connections = {}
+                        end
+
+                        if trinket_bot.gnav_connections then
+                            for _, conn in ipairs(trinket_bot.gnav_connections) do
+                                if conn then
+                                    pcall(function() conn:Disconnect() end)
+                                end
+                            end
+                            trinket_bot.gnav_connections = {}
+                        end
+
+                        if active_tween_data then
+                            if active_tween_data.tween then
+                                pcall(function() active_tween_data.tween:Cancel() end)
+                                active_tween_data.tween = nil
+                            end
+                            if active_tween_data.connection then
+                                pcall(function() active_tween_data.connection:Disconnect() end)
+                                active_tween_data.connection = nil
+                            end
+                        end
+
+                        restore_bot_state()
+
+                        if trinket_bot.visualize_enabled then
+                            update_visualizations()
+                        end
+
+                        library:Notify("Bot manually stopped")
+                    else
+                        local was_botstarted = mem:HasItem("botstarted") and mem:GetItem("botstarted") == "true"
+                        trinket_bot.path_running = false
+                        mem:RemoveItem("botstarted")
+                        mem:RemoveItem("serverhop_count")
+
+                        if was_botstarted then
+                            library:Notify("Bot state reset (was in inconsistent state)")
+                        else
+                            library:Notify("Bot is not running")
+                        end
+                    end
+                end
+            })
+
             stop_button:SetVisible(false)
 
             task.spawn(function()
